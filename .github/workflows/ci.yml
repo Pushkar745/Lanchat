@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  # ── Backend build check ──────────────────────────────────────
+  # ── Backend build ─────────────────────────────────────────────
   backend:
     name: Build Spring Boot Backend
     runs-on: ubuntu-latest
@@ -25,9 +25,10 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: ./mvnw clean install -DskipTests
+        # Points directly to where pom.xml actually lives
+        run: mvn clean install -DskipTests -f pom.xml
 
-  # ── Frontend build check ─────────────────────────────────────
+  # ── Frontend build ────────────────────────────────────────────
   frontend:
     name: Build React Frontend
     runs-on: ubuntu-latest
@@ -40,10 +41,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
+        # Points to the frontend subfolder
         working-directory: ./frontend
         run: npm install
 

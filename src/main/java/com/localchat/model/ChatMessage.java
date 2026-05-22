@@ -1,0 +1,37 @@
+package com.localchat.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.Instant;
+
+@Data               // Generates getters, setters, equals, hashCode, toString
+@Builder            // Enables ChatMessage.builder().type(...).build() pattern
+@NoArgsConstructor  // Required by Jackson for JSON deserialization from frontend
+@AllArgsConstructor // Required by @Builder to work correctly
+public class ChatMessage {
+
+    // Message type — controls how the frontend renders each message
+    public enum Type {
+        CHAT,   // A normal user message
+        JOIN,   // User connected — shown as a system notice
+        LEAVE ,
+        TYPING// User disconnected — shown as a system notice
+    }
+
+    private Type type;
+
+    // The actual text content of the message
+    private String content;
+
+    // Set server-side from the TCP handshake — client cannot fake this
+    private String senderIp;
+
+    // Friendly display name derived from IP e.g. "User 42"
+    private String senderName;
+
+    // Set server-side at the moment the message is received
+    private Instant timestamp;
+}
